@@ -1523,7 +1523,7 @@ li {
 }
 
 .point-inner {
-  width: fit-content;
+  width: auto;
   margin: 0 auto;
 }
 
@@ -1979,6 +1979,7 @@ footer {
 
 .point-ttl {
   text-align: center;
+  padding: 0 20px;
 }
 
 .point-ttl p {
@@ -1989,10 +1990,6 @@ footer {
 
 .point-ttl p .line {
   background-image: linear-gradient(transparent 70%, #FFF300 70%);
-}
-
-.point-ttl {
-  text-align: center;
 }
 
 .diagnosis-btn {
@@ -2538,6 +2535,15 @@ footer {
     width: 356px;
   }
 
+  .msg2 .ly_commonInner {
+    box-sizing: border-box;
+    padding: 0px 0 65px;
+  }
+
+  .point-logo {
+    padding: 0 20px;
+  }
+
   .slide {
     flex: 0 0 100vw;
     max-width: 100vw;
@@ -2570,11 +2576,11 @@ footer {
 
   .point-ttl {
     text-align: center;
-    padding: 0 20px;
   }
 
   .point-inner .point-txt {
     padding: 0 20px;
+    font-size: 18px;
   }
 
   .u-mbs.is-md {
@@ -2682,7 +2688,7 @@ footer {
     background-size: contain;
     position: absolute;
     background-image: url(img/icon-right.png);
-    top: 2px;
+    top: 0px;
     right: -40px;
   }
 
@@ -2786,7 +2792,7 @@ footer {
     background-size: contain;
     position: absolute;
     background-image: url(img/icon-right.png);
-    top: 3px;
+    top: 0px;
     right: -35px;
   }
 
