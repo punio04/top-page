@@ -624,70 +624,96 @@
 
 
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const track = document.querySelector('.diagnosis-slider__track');
-      const slides = document.querySelectorAll('.slide');
-      let currentIndex = 0;
-      let answers = [];
 
-      // 表示更新関数
-      function goToSlide(index) {
-        track.style.transition = 'none';
-        track.style.transform = `translateX(-${index * 100}vw)`;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const track = document.querySelector('.diagnosis-slider__track');
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+    let answers = [];
 
-        slides.forEach((slide, i) => {
-          const q = slide.querySelector('.js-question');
-          if (q) {
-            q.classList.toggle('is-hidden', i !== index);
+    // 全質問を非表示で初期化
+    slides.forEach(slide => {
+      const q = slide.querySelector('.js-question');
+      if (q) q.style.display = 'none';
+    });
+
+    // 高さ調整関数
+    function adjustTrackHeight(index) {
+      const targetSlide = slides[index];
+      if (!targetSlide || !track) return;
+
+      const images = targetSlide.querySelectorAll('img');
+      let loadedCount = 0;
+
+      const setHeight = () => {
+        const height = targetSlide.offsetHeight;
+        track.style.height = height + 'px';
+      };
+
+      if (images.length === 0) {
+        setHeight();
+      } else {
+        images.forEach(img => {
+          if (img.complete) {
+            loadedCount++;
+          } else {
+            img.addEventListener('load', () => {
+              loadedCount++;
+              if (loadedCount === images.length) setHeight();
+            });
           }
         });
 
-        setTimeout(() => {
-          track.style.transition = ''; // アニメーション戻す
-        }, 0);
+        if (loadedCount === images.length) setHeight();
       }
+    }
 
-      // 初期化：スタート画面だけ表示
-      goToSlide(0);
+    // スライド切り替え
+    function goToSlide(index) {
+      track.style.transform = `translateX(-${index * 100}vw)`;
+      slides.forEach((slide, i) => {
+        const box = slide.querySelector('.js-question');
+        if (box) {
+          box.style.display = i === index ? 'block' : 'none';
+        }
+      });
+      adjustTrackHeight(index);
+    }
 
-      // スタートボタン押下
-      document.querySelector('.js-start').addEventListener('click', () => {
+    // スタートボタン押下で開始
+    const startBtn = document.querySelector('.js-start');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
         answers = [];
         currentIndex = 1;
         goToSlide(currentIndex);
       });
+    }
 
-      // 回答ボタン押下時の処理
-      document.querySelectorAll('.btn-answer').forEach(btn => {
-        btn.addEventListener('click', () => {
-          // 同じスライド内の選択をリセット
-          const parentSlide = btn.closest('.slide');
-          parentSlide.querySelectorAll('.btn-answer').forEach(b => b.classList.remove('selected'));
-          // 今クリックしたやつだけselected追加
-          btn.classList.add('selected');
+    // 回答クリックで進む or 結果へ
+    document.querySelectorAll('.btn-answer').forEach(btn => {
+      btn.addEventListener('click', () => {
+        answers.push(btn.dataset.answer);
+        currentIndex++;
 
-          // 回答記録
-          answers.push(btn.dataset.answer);
-          currentIndex++;
-
-          // 次スライド or 結果表示
-          if (currentIndex <= 5) {
-            goToSlide(currentIndex);
-          } else {
-            const yesCount = answers.filter(ans => ans === 'yes').length;
-            const resultNum = yesCount <= 1 ? 1 : yesCount === 2 ? 2 : yesCount === 3 ? 3 : yesCount === 4 ? 4 : 5;
-            const resultSlide = document.querySelector(`.slide[data-result="${resultNum}"]`);
-            const resultIndex = Array.from(slides).indexOf(resultSlide);
-            if (resultIndex !== -1) {
-              goToSlide(resultIndex);
-            }
-          }
-        });
+        if (currentIndex <= 5) {
+          goToSlide(currentIndex);
+        } else {
+          const yesCount = answers.filter(ans => ans === 'yes').length;
+          const resultNum = yesCount <= 1 ? 1 : yesCount === 2 ? 2 : yesCount === 3 ? 3 : yesCount === 4 ? 4 : 5;
+          const resultSlide = document.querySelector(`.slide[data-result="${resultNum}"]`);
+          const resultIndex = Array.from(slides).indexOf(resultSlide);
+          if (resultIndex !== -1) goToSlide(resultIndex);
+        }
       });
     });
 
-  </script>
+    // 初期表示でスタート画面に高さを合わせる
+    adjustTrackHeight(0);
+  });
+</script>
+
 
 
 

@@ -2117,6 +2117,13 @@ footer {
   max-width: 100vw;
   box-sizing: border-box;
   padding: 6px 100px 80px 100px;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: height 0.3s ease;
+  overflow: hidden;
 }
 
 .slide-active {
@@ -2128,7 +2135,10 @@ footer {
   transition: transform 0.5s ease;
   width: calc(100vw * 11);
   transform: translateX(0);
-  overflow-x: hidden;
+  height: auto !important;
+  will-change: height;
+  transition: height 0.3s ease;
+  overflow: hidden;
 }
 
 .diagnosis-btn:hover {
